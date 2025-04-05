@@ -1,3 +1,9 @@
+## 11.04.2025
+
+Postęp: Dodanie zgeneralizowanych wersji map dla 1 i 2 poziomu etykiet. Utworzenie legend 1 i 2 poziomu. Aktualizacja kodu zliczającego piksele danego typu terenu o opcje dla wyższych poziomów. Wizualizacja map wyższego poziomu.
+
+Problemy / kwestie do przedyskutowania:
+
 ## 04.04.2025
 
 Postęp: Zautomatyzowano pobieranie zdjęć dla poszczególnych lat z tego samego obszaru. Określono pełną legendę w kodzie. Dokonano prostej wizualizacji wraz z legendą.
