@@ -2,7 +2,7 @@
 
 Postęp: Przerobienie wizualizacji zmiany terenów  konkretnych lat na forme animacji. Dodanie trendu zmian typu powierzchni dla trzech poziomów, wykres zmian ilości poligonów danego typu terenu.
 
-Problemy / kwestie do przedyskutowania: Przy większych analizach jak próba prostego modelu ML, czas trwania obliczeń jest za długi i nie jest to optymalna opcja. 
+Problemy / kwestie do przedyskutowania: Przy większych analizach jak próba prostego modelu ML, czas trwania obliczeń jest za długi i nie jest to optymalna opcja. Problem z wyświetlaniem animacji bez zapisu do pliku.
 
 ## 25.04.2025
 
