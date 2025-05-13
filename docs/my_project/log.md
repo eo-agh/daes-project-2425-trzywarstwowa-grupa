@@ -1,3 +1,8 @@
+## 13.05.2025
+Postęp: Wykonanie wizualizacji przejść użytkowania ziemi.
+
+Problemy / kwestie do przedyskutowania:
+
 ## 09.05.2025
 
 Postęp: Przerobienie wizualizacji zmiany terenów  konkretnych lat na forme animacji. Dodanie trendu zmian typu powierzchni dla trzech poziomów, wykres zmian ilości poligonów danego typu terenu.
