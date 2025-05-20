@@ -1,3 +1,8 @@
+## 24.05.2025
+Postęp: Dokonano nieznacznych optymalizacji i sprzątania. Stworzono osobny moduł analityczny LandUseChangeAnalyzer, który porządkuje wszystkie obliczenia analityczne i przygotowywuje dane dla miasta do wizualizacji i analizy. Stworzono notatnik analityczny, który importuje moduł LandUseChangeAnalyzer i może dokonywać analizy różnych miast. Dodano wczytywanie i przygotowanie danych dla jednego miasta i kilka wizualizacji, głównie z notatnika testowego (uporządkowano wszystko w funkcję). 
+
+Problemy / kwestie do przedyskutowania:
+
 ## 13.05.2025
 Postęp: Wykonanie wizualizacji przejść użytkowania ziemi.
 
