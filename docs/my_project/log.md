@@ -1,3 +1,7 @@
+## 30.05.2025
+Postęp: Dokonano nieznacznych optymalizacji. Stworzono osobny moduł analityczny LandChangeVisualization, który przygotowuje  wizualizacje i analizy pod nie. Dodano możliwość zaznaczania terenów analizowanych na zwykłej mapie. Sprawdzono obszare wewnatrz regionów, które najczęściej zminiały swój typ.  
+
+Problemy / kwestie do przedyskutowania:
 ## 24.05.2025
 Postęp: Dokonano nieznacznych optymalizacji i sprzątania. Stworzono osobny moduł analityczny LandUseChangeAnalyzer, który porządkuje wszystkie obliczenia analityczne i przygotowywuje dane dla miasta do wizualizacji i analizy. Stworzono notatnik analityczny, który importuje moduł LandUseChangeAnalyzer i może dokonywać analizy różnych miast. Dodano wczytywanie i przygotowanie danych dla jednego miasta i kilka wizualizacji, głównie z notatnika testowego (uporządkowano wszystko w funkcję). 
 
