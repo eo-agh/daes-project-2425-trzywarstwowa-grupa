@@ -1,5 +1,5 @@
 ## 30.05.2025
-Postęp: Dokonano nieznacznych optymalizacji. Stworzono osobny moduł analityczny LandChangeVisualization, który przygotowuje  wizualizacje i analizy pod nie. Dodano możliwość zaznaczania terenów analizowanych na zwykłej mapie. Sprawdzono obszare wewnatrz regionów, które najczęściej zminiały swój typ.  
+Postęp: Dokonano nieznacznych optymalizacji. Stworzono osobny moduł analityczny LandChangeVisualization, który przygotowuje  wizualizacje i analizy pod nie. Dodano możliwość zaznaczania terenów analizowanych na zwykłej mapie. Sprawdzono obszare wewnatrz regionów, które najczęściej zminiały swój typ. Dodano również macierz przejścia użytkownia terenu.
 
 Problemy / kwestie do przedyskutowania:
 ## 24.05.2025

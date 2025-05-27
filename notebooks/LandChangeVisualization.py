@@ -220,3 +220,99 @@ def plot_cities_land_use_change_map( city_names, city_objects, bbox_source,  yea
         min_changes=min_changes,
         cmap_name=cmap_name
     )
+
+def plot_land_use_change_map(dfs, years, class_column="class_lvl_1", cmap_name="tab20"):
+    
+    # Przygotowanie danych
+    base = dfs[years[0]].loc[:, ['x', 'y', class_column]].copy()
+    base.columns = ['x', 'y', 'class_base']
+    base['class_mid'] = dfs[years[1]][class_column].values
+    base['class_final'] = dfs[years[2]][class_column].values
+
+    base['join'] = base['class_base'] + ' -> ' + base['class_final']
+    base['join6'] = base['class_base'] + ' -> ' + base['class_mid']
+    base['join18'] = base['class_mid'] + ' -> ' + base['class_final']
+
+    filters = {
+        f'{years[0]} → {years[2]}': base[base['class_base'] != base['class_final']].copy(),
+        f'{years[0]} → {years[1]}': base[base['class_base'] != base['class_mid']].copy(),
+        f'{years[1]} → {years[2]}': base[base['class_mid'] != base['class_final']].copy()
+    }
+
+    # Kolory
+    unique_values = pd.unique(pd.concat([df[key] for key, df in zip(['join', 'join6', 'join18'], filters.values())]))
+    n = len(unique_values)
+    cmap = cm.get_cmap(cmap_name, n)
+    color_map = {val: tuple((np.array(cmap(i)[:3]) * 255).astype(int)) for i, val in enumerate(unique_values)}
+
+    def make_image(df, join_col):
+        df['color'] = df[join_col].map(color_map)
+        width = df['x'].max() + 1
+        height = df['y'].max() + 1
+        img = np.zeros((height, width, 3), dtype=np.uint8)
+        img[df['y'], df['x']] = np.stack(df['color'])
+        return PILImage.fromarray(img, mode='RGB')
+
+    # Generowanie obrazów dla każdej zmiany
+    titles = list(filters.keys())
+    joins = ['join', 'join6', 'join18']
+    images = [make_image(df, join) for df, join in zip(filters.values(), joins)]
+
+    # Rysowanie obrazów
+    fig, axs = plt.subplots(2, 2, figsize=(14, 10))
+    for ax, title, img in zip(axs.flat[:3], titles, images):
+        ax.imshow(img)
+        ax.set_title(f"Zmiana: {title}")
+        ax.axis("off")
+
+    # Tworzenie legendy
+    ax_legend = axs[1, 1]
+    ax_legend.axis("off")
+    ax_legend.set_title("Legenda", fontsize=12, fontweight='bold')
+
+    legend_patches = [
+        mlines.Line2D([0], [0], marker='o', color='w', markersize=10,
+                      markerfacecolor=np.array(color_map[label]) / 255.0, label=label)
+        for label in unique_values
+    ]
+    ax_legend.legend(handles=legend_patches, loc="upper left", fontsize=8, frameon=False)
+
+    plt.tight_layout()
+    plt.show()
+
+def plot_land_use_change_matrix_matplotlib(dfs, year_from, year_to, class_column='class_lvl_1', figsize=(10, 6), cmap="Blues"):
+    df1 = dfs[year_from][class_column]
+    df2 = dfs[year_to][class_column]
+
+    change_df = pd.DataFrame({f"{year_from}": df1, f"{year_to}": df2})
+    change_matrix = pd.crosstab(change_df[f"{year_from}"], change_df[f"{year_to}"]).astype(float)
+
+    # Normalizacja wierszy do procentów
+    change_matrix = change_matrix.div(change_matrix.sum(axis=1), axis=0) * 100
+
+    row_labels = change_matrix.index.tolist()
+    col_labels = change_matrix.columns.tolist()
+    data = change_matrix.values
+
+    fig, ax = plt.subplots(figsize=figsize)
+    cax = ax.imshow(data, cmap=cmap)
+
+    # Etykiety osi
+    ax.set_xticks(np.arange(len(col_labels)))
+    ax.set_yticks(np.arange(len(row_labels)))
+    ax.set_xticklabels(col_labels, rotation=45, ha="right")
+    ax.set_yticklabels(row_labels)
+
+    # Adnotacje
+    for i in range(len(row_labels)):
+        for j in range(len(col_labels)):
+            text = f"{data[i, j]:.1f}%"
+            ax.text(j, i, text, ha="center", va="center", fontsize=8, color="black")
+
+    ax.set_title(f"Zmiany użytkowania terenu: {year_from} → {year_to}")
+    ax.set_xlabel(f"Nowa klasa ({year_to})")
+    ax.set_ylabel(f"Stara klasa ({year_from})")
+
+    fig.colorbar(cax, ax=ax, label="% zmiany")
+    plt.tight_layout()
+    plt.show()
