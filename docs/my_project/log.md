@@ -1,4 +1,9 @@
 ## 30.05.2025
+Postęp: Logi z kodu obliczeniowego zmieniono na opcjonalne i domyślnie wyłączono. Uporządkowano analizy oraz wyznaczono ogólną formę sprawozdania. Dokonano analizy i opisu części wyników.
+
+Problemy / kwestie do przedyskutowania:
+
+## 30.05.2025
 Postęp: Dokonano nieznacznych optymalizacji. Stworzono osobny moduł analityczny LandChangeVisualization, który przygotowuje  wizualizacje i analizy pod nie. Dodano możliwość zaznaczania terenów analizowanych na zwykłej mapie. Sprawdzono obszare wewnatrz regionów, które najczęściej zminiały swój typ. Dodano również macierz przejścia użytkownia terenu.
 
 Problemy / kwestie do przedyskutowania:

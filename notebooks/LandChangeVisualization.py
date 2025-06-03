@@ -114,7 +114,7 @@ def MapAnimationByYears(images_dict, legend_dict_per_year, area_name, level_name
     else:
         return ani
     
-def seperate_classes (level_classes, years, dfs,class_lvl,area_name):
+def seperate_classes (level_classes, years, dfs,class_lvl,area_name, color_dict):
     results = []
 
     for level_type in level_classes:
@@ -137,9 +137,14 @@ def seperate_classes (level_classes, years, dfs,class_lvl,area_name):
                 "count": num_features
             })
 
-    data =pd.DataFrame(results)
+    data = pd.DataFrame(results)
     df_islands_pivot = data.pivot(index='year', columns='class', values='count')
-    df_islands_pivot.plot(kind='line', figsize=(10, 6), marker='o')
+
+    # Tworzenie mapy kolorów
+    class_to_rgb = {v: k for k, v in color_dict.items()}
+    colors = [tuple(x / 255 for x in class_to_rgb.get(level_type, (0, 0, 0))) for level_type in df_islands_pivot.columns]
+
+    df_islands_pivot.plot(kind='line', figsize=(10, 6), marker='o', color=colors)
     plt.title(f"Liczba wysp w {area_name.replace('_', ' ').title()} w latach {years[0]}-{years[-1]}")
     plt.xlabel("Rok")
     plt.ylabel("Liczba wysp")
@@ -147,7 +152,7 @@ def seperate_classes (level_classes, years, dfs,class_lvl,area_name):
     plt.legend(title="Typ terenu", bbox_to_anchor=(1.05, 1), loc='upper left')
     plt.grid(True)
     plt.tight_layout()
-    plt.show() 
+    plt.show()
 
 
     

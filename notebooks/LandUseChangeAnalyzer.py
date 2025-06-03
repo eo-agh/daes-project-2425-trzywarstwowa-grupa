@@ -134,7 +134,8 @@ def print_available_bounding_boxes():
         print(city)
 
 class AreaManager:
-    def __init__(self, area_name: str, api_url: str = "https://image.discomap.eea.europa.eu/arcgis/rest/services/Corine/CLC{}_WM/MapServer/export", years: list = [1990,2000,2006,2012,2018]):
+    def __init__(self, area_name: str, api_url: str = "https://image.discomap.eea.europa.eu/arcgis/rest/services/Corine/CLC{}_WM/MapServer/export", years: list = [1990,2000,2006,2012,2018], show_logs: bool = False):
+        self.show_logs = show_logs
         self.area_name = area_name
         if area_name in EUROPA_OBSZARY_BBOX.keys():
             bbox_values = EUROPA_OBSZARY_BBOX[area_name]
@@ -165,12 +166,14 @@ class AreaManager:
 
         # ściągamy plik dla każdego dostępnego roku
         for year in years:
-            print(api_url.format(year))
             response = requests.get(api_url.format(year), params=params)
-            print(f"Obraz dla roku {year} wczytany")
+            if self.show_logs:
+                print(api_url.format(year))
+                print(f"Obraz dla roku {year} wczytany")
             image = PILImage.open(BytesIO(response.content))
             self.images_lvl_3[year] = image
-        print("Pobrano wszystkie obrazy.")
+        if self.show_logs:
+            print("Pobrano wszystkie obrazy.")
     
     def create_analytical_df(self):
         self.dfs = {}  
@@ -191,9 +194,11 @@ class AreaManager:
                 'rgb': list(zip(pixels[:, 0], pixels[:, 1], pixels[:, 2]))
             })
 
-            self.dfs[year] = df  
-            print(f"DataFrame dla roku {year} utworzony.")
-        print(f"Obliczono wszystkie DataFrame.")
+            self.dfs[year] = df
+            if self.show_logs:  
+                print(f"DataFrame dla roku {year} utworzony.")
+        if self.show_logs:
+            print(f"Obliczono wszystkie DataFrame.")
     
     def count_classes(self):
         self.class_lvl_3_counts_per_year = {}
@@ -221,9 +226,10 @@ class AreaManager:
             self.class_lvl_3_counts_per_year[year] = class_lvl_3_counts
             self.class_lvl_2_counts_per_year[year] = class_lvl_2_counts
             self.class_lvl_1_counts_per_year[year] = class_lvl_1_counts
-
-            print(f"Zliczenia klas dla roku {year} utworzone.")
-        print(f"Obliczono zliczenia dla każdego roku.")
+            if self.show_logs:
+                print(f"Zliczenia klas dla roku {year} utworzone.")
+        if self.show_logs:
+            print(f"Obliczono zliczenia dla każdego roku.")
 
     def calculate_percentage_of_classes(self):
         self.class_lvl_3_percentage_per_year = {}
@@ -239,8 +245,8 @@ class AreaManager:
 
             total = self.class_lvl_1_counts_per_year[year].sum()
             self.class_lvl_1_percentage_per_year[year] = (self.class_lvl_1_counts_per_year[year] / total) * 100
-
-        print("Obliczono procentowy udział klas.")
+        if self.show_logs:
+            print("Obliczono procentowy udział klas.")
 
     def determine_unique_categories(self):
         self.unique_categories_lvl_3_per_year = {}
@@ -259,7 +265,8 @@ class AreaManager:
                 categories = counts.index
                 self.unique_categories_lvl_1_per_year[year] = {level_1_legend_rgb[el.split(" - ")[0]]: el for el in categories}
 
-        print("Wyznaczono unikalne kategorie.")
+        if self.show_logs:
+            print("Wyznaczono unikalne kategorie.")
 
     def generate_images_from_dfs(self,rgb_column):
         images = {}
@@ -276,8 +283,9 @@ class AreaManager:
             image_array[y, x] = rgb
             image = PILImage.fromarray(image_array, mode='RGB')
             images[year] = image
-
-            print(f'Obraz dla roku {year} ({rgb_column}) utworzony.')
+            
+            if self.show_logs:
+                print(f'Obraz dla roku {year} ({rgb_column}) utworzony.')
 
         return images
     
@@ -286,13 +294,18 @@ class AreaManager:
         self.images_lvl_2 = self.generate_images_from_dfs(rgb_column='rgb_lvl_2')
 
     def prepare_analytical_data(self):
-        print("-----TWORZENIE DATAFRAME-----\n")
+        if self.show_logs:
+            print("-----TWORZENIE DATAFRAME-----\n")
         self.create_analytical_df()
-        print("\n------ZLICZENIA KLAS------\n")
+        if self.show_logs:
+            print("\n------ZLICZENIA KLAS------\n")
         self.count_classes()
-        print("\n------ZLICZENIA PROCENTÓW------\n")
+        if self.show_logs:
+            print("\n------ZLICZENIA PROCENTÓW------\n")
         self.calculate_percentage_of_classes()
-        print("\n------UNIKALNE KLASY------\n")
+        if self.show_logs:
+            print("\n------UNIKALNE KLASY------\n")
         self.determine_unique_categories()
-        print("\n------OBRAZY DLA NIŻSZYCH POZIOMÓW------\n")
+        if self.show_logs:
+            print("\n------OBRAZY DLA NIŻSZYCH POZIOMÓW------\n")
         self.generate_lvl_2_and_1_images()
