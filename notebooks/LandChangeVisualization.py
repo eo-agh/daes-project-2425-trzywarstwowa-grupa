@@ -321,3 +321,40 @@ def plot_land_use_change_matrix_matplotlib(dfs, year_from, year_to, class_column
     fig.colorbar(cax, ax=ax, label="% zmiany")
     plt.tight_layout()
     plt.show()
+
+
+def calculate_land_use_trend_for_cities(class_percentage_per_city, area_names, show_plot=True):
+   
+    first_city_data = class_percentage_per_city[0]
+    first_year = sorted(first_city_data.keys())[0]
+    classes = sorted(first_city_data[first_year].index)
+    
+    city_dfs = []
+    for city_data in class_percentage_per_city:
+        trend = []
+        for year, series in city_data.items():
+            row = {"Year": year}
+            row.update(series.to_dict())
+            trend.append(row)
+        df = pd.DataFrame(trend).set_index("Year").fillna(0).sort_index()
+        city_dfs.append(df)
+    
+    if show_plot:
+        fig, axs = plt.subplots(len(classes), 1, figsize=(10, 4*len(classes)), sharex=True)
+        if len(classes) == 1:
+            axs = [axs]
+        
+        for i, class_label in enumerate(classes):
+            ax = axs[i]
+            for df, area_name in zip(city_dfs, area_names):
+                if class_label in df.columns:
+                    ax.plot(df.index, df[class_label], marker='o', label=area_name)
+            ax.set_title(f"Zmiana udziału klasy: {class_label}")
+            ax.set_ylabel("Udział (%)")
+            ax.grid(True)
+            ax.legend()
+        
+        axs[-1].set_xlabel("Rok")
+        plt.suptitle("Trendy użytkowania terenu w 3 miastach")
+        plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+        plt.show()
